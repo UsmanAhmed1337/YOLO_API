@@ -22,15 +22,16 @@ def create_video_writer(video_cap, output_filename):
 
 def inference_image(model, image_path):
     results = model.predict(image_path)
-    bounding_boxes = []
+    #bounding_boxes = []
     for result in results:
-        for i in range(len(result.boxes)):
-            bounding_box = {
-                "class":class_names[int(result.boxes.cls[i].numpy())],
-                "coordinates":result.boxes.xyxy[i].numpy().tolist()
-            }
-            bounding_boxes.append(bounding_box)
-    return bounding_boxes
+        #for i in range(len(result.boxes)):
+        #    bounding_box = {
+        #        "class":class_names[int(result.boxes.cls[i].numpy())],
+        #        "coordinates":result.boxes.xyxy[i].numpy().tolist()
+        #    }
+        #    bounding_boxes.append(bounding_box)
+        result.save('img.jpg')
+    return 
 
 
 
