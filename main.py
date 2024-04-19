@@ -8,16 +8,16 @@ import io
 app = Flask(__name__)
 CORS(app)
 
-model_path = './best.pt'  
-model = load_model(model_path)
-
-@app.route('/')
+@app.route('/', methods=['GET'])
 def hello_world():
     return 'Welcome! The endpoint is up and running.'
 
 
 @app.route('/inference_image', methods=['POST'])
 def api_inference_image():
+    model_path = 'best.pt'
+    model = load_model(model_path)
+
     try:
         if not request.content_type.startswith('multipart/form-data'):
             return jsonify({'error': 'Invalid content type'}), 400
@@ -25,11 +25,13 @@ def api_inference_image():
         image_file = request.files['image']
         image = Image.open(io.BytesIO(image_file.read()))
         bounding_boxes = inference_image(model, image)
+        del model
         return jsonify(bounding_boxes)
     
     except Exception as e:
         print(e)
+        del model
         return jsonify({'error': f'An error occurred: {str(e)}'}), 400
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=8080, debug=True)
+    app.run(debug=True)
